@@ -240,7 +240,11 @@ class CourseStartDate(DateSummary):
 
     @property
     def date(self):
-        return self.course.start
+        if self.course.self_paced:
+            enrollment = CourseEnrollment.get_enrollment(self.user, self.course_id)
+            return enrollment.created
+        else:
+            return self.course.start
 
     def register_alerts(self, request, course):
         """
